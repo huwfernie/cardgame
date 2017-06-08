@@ -9,12 +9,12 @@ poker.setup = function() {
 
   this.$startButton.on('click', (e)=> {
     e.preventDefault();
-    buildTheDeck();
+    poker.buildTheDeck();
   }).bind(this);
 
 };
 
-function buildTheDeck(){
+poker.buildTheDeck = function buildTheDeck(){
   /* builds an array of 52 objects, each object represents a card with keys of
   name, suit, value and image
   aces low */
@@ -27,11 +27,11 @@ function buildTheDeck(){
       deck.push(thisCard);
     }
   });
-  return shuffle(deck);
-}
+  return poker.shuffle(deck);
+};
 
 
-function shuffle(array) {
+poker.shuffle = function shuffle(array) {
   /* This is a fisher-Yates shuffle algorithm, released under the
   Apache License and taken from github via stack overflow:
   https://github.com/coolaj86/knuth-shuffle
@@ -51,10 +51,10 @@ function shuffle(array) {
     array[randomIndex] = temporaryValue;
   }
   // console.log('shuffled', array);
-  return deal(array);
-}
+  return poker.deal(array);
+};
 
-function deal(deck) {
+poker.deal = function deal(deck) {
   /*
   Takes an input of the deck (array of objects) then finds number of players and size of hand from the
   input boxes on the HTML, checks there are enough cards in the deck and then 'deals' each player a hand
@@ -65,8 +65,11 @@ function deal(deck) {
   */
   const $numberOfPlayers = $('#numberOfPlayers').val();
   const $numberOfCards = $('#numberOfCards').val();
+
   console.log(`Dealing ${$numberOfPlayers} players with ${$numberOfCards} cards`);
+
   if(deck.length < ($numberOfCards * $numberOfPlayers)) {
+    // could make this an error message or alert.
     console.log('their aren\'t enough cards for this game');
     return;
   } else {
@@ -81,32 +84,59 @@ function deal(deck) {
       thisPlayer.hand = (deck.slice(y,x));
       thisPlayer.score = 0;
       players.push(thisPlayer);
-      // console.log(`player${i}, ${y}, ${x}`);
-      // console.log(thisPlayer);
     }
     console.log('done', players);
-    return getScores(players);
+    return poker.getScores(players);
   }
-}
+};
 
-function getScores(players){
-  console.log('Who wins');
+poker.getScores = function getScores(players){
+  /*Loop through all players, then each card in that players hand, add the card.value
+  to the cumulative player.score*/
+  console.log('Get Scores');
   players.forEach((player) => {
     player.hand.forEach((card) => {
       player.score += card.value;
     });
   });
 
-  return whoWins(players);
-}
+  return poker.whoWins(players);
+};
 
-function whoWins(players){
+poker.whoWins = function whoWins(players){
+  /* loop through players array, if the score is highest replace the temp winner
+  and winning score with current values, then pass info to the finish function to
+  display data on screen.*/
   console.log('Who wins');
-  players.forEach((player) => {
+
+  let winner = 'No one';
+  let winningScore = 0;
+  let draw = false;
+
+  for(let i=0; i<players.length; i++) {
+    const player = players[i];
     console.log(player.name, ' : ', player.score);
-  });
+    if(player.score === winningScore) {
+      return draw = true;
+    }
+    if(player.score > winningScore) {
+      winner = player.name;
+      winningScore = player.score;
+    }
+  }
+
+  return poker.finish(winner, draw);
+};
+
+poker.finish = function finish(winner,draw) {
+  /* find HTML with class ".winner" and fill it with the name of the winning player*/
   const $winner = $('.winner');
-  return $winner.html('Hello');
-}
+
+  if(draw) {
+    return $winner.html('It\'s a draw!!!');
+  } else {
+    return $winner.html(`winner is : ${winner}`);
+  }
+};
 
 $(poker.setup.bind(poker));
