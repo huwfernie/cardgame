@@ -4,7 +4,14 @@ poker.setup = function() {
 
 // run this on load!!
   console.log('Huw');
-  buildTheDeck();
+
+  this.$startButton = $('#startButton');
+
+  this.$startButton.on('click', (e)=> {
+    e.preventDefault();
+    buildTheDeck();
+  }).bind(this);
+
 };
 
 function buildTheDeck(){
