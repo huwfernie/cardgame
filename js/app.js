@@ -27,7 +27,7 @@ function buildTheDeck(){
       deck.push(thisCard);
     }
   });
-  shuffle(deck);
+  return shuffle(deck);
 }
 
 
@@ -50,24 +50,45 @@ function shuffle(array) {
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-  console.log('shuffled');
-  deal(array);
+  // console.log('shuffled', array);
+  return deal(array);
 }
 
 function deal(deck) {
+  /*
+  Takes an input of the deck (array of objects) then finds number of players and size of hand from the
+  input boxes on the HTML, checks there are enough cards in the deck and then 'deals' each player a hand
+  of cards
+
+  output is an array (of players) filled with arrays (hands of cards)
+  */
   const $numberOfPlayers = $('#numberOfPlayers').val();
   const $numberOfCards = $('#numberOfCards').val();
   console.log(`Dealing ${$numberOfPlayers} players with ${$numberOfCards} cards`);
   if(deck.length < ($numberOfCards * $numberOfPlayers)) {
-    console.log('numbers don\'t match');
+    console.log('their aren\'t enough cards for this game');
+    return;
   } else {
-    console.log('done');    
-    whoWins();
+    const players = [];
+    for(let i=1; i<=$numberOfPlayers; i++) {
+      console.log(`player${i}`);
+      const thisPlayer = new Array();
+      const x = i*$numberOfCards;
+      const y = x-$numberOfCards;
+      thisPlayer.push(deck.slice(y,x));
+      players.push(thisPlayer);
+      // console.log(`player${i}, ${y}, ${x}`);
+      // console.log(thisPlayer);
+    }
+    console.log('done', players);
+    return whoWins(players);
   }
 }
 
 function whoWins(){
   console.log('Who wins');
+  const $winner = $('.winner');
+  return $winner.html('Hello');
 }
 
 $(poker.setup.bind(poker));
