@@ -60,7 +60,8 @@ function deal(deck) {
   input boxes on the HTML, checks there are enough cards in the deck and then 'deals' each player a hand
   of cards
 
-  output is an array (of players) filled with arrays (hands of cards)
+  output is an array (of players) filled with objects (players),
+  each player has keys of : name, score, hand(array of card objects)
   */
   const $numberOfPlayers = $('#numberOfPlayers').val();
   const $numberOfCards = $('#numberOfCards').val();
@@ -71,22 +72,39 @@ function deal(deck) {
   } else {
     const players = [];
     for(let i=1; i<=$numberOfPlayers; i++) {
-      console.log(`player${i}`);
-      const thisPlayer = new Array();
+      const name = `player${i}`;
+      const thisPlayer = {};
       const x = i*$numberOfCards;
       const y = x-$numberOfCards;
-      thisPlayer.push(deck.slice(y,x));
+
+      thisPlayer.name = name;
+      thisPlayer.hand = (deck.slice(y,x));
+      thisPlayer.score = 0;
       players.push(thisPlayer);
       // console.log(`player${i}, ${y}, ${x}`);
       // console.log(thisPlayer);
     }
     console.log('done', players);
-    return whoWins(players);
+    return getScores(players);
   }
 }
 
-function whoWins(){
+function getScores(players){
   console.log('Who wins');
+  players.forEach((player) => {
+    player.hand.forEach((card) => {
+      player.score += card.value;
+    });
+  });
+
+  return whoWins(players);
+}
+
+function whoWins(players){
+  console.log('Who wins');
+  players.forEach((player) => {
+    console.log(player.name, ' : ', player.score);
+  });
   const $winner = $('.winner');
   return $winner.html('Hello');
 }
