@@ -15,17 +15,25 @@ poker.setup = function() {
 };
 
 function buildTheDeck(){
+  // builds an array of 52 objects, each object represents a card with keys of
+  // name, suit, value and image
+  // aces low
   console.log('buildTheDeck');
   const deck = [];
-  for(let i=1; i<=13; i++) {
-    const thisCard = { name: 'ace', suit: 'hearts', value: i, image: `${i}h` };
-    deck.push(thisCard);
-  }
+  const suits = ['hearts','diamonds','clubs','spades'];
+  suits.forEach((suit) => {
+    console.log(suit);
+    for(let i=1; i<=13; i++) {
+      const thisCard = { name: i, suit, value: i, image: `${i}${suit[0]}` };
+      deck.push(thisCard);
+    }
+  });
   shuffle(deck);
 }
 
 function shuffle(deck){
   console.log('shuffle');
+  // import fisher yates or similar
   console.log(deck);
   deal();
 }
