@@ -16,11 +16,17 @@ poker.setup = function() {
 
 function buildTheDeck(){
   console.log('buildTheDeck');
-  shuffle();
+  const deck = [];
+  for(let i=1; i<=13; i++) {
+    const thisCard = { name: 'ace', suit: 'hearts', value: i, image: `${i}h` };
+    deck.push(thisCard);
+  }
+  shuffle(deck);
 }
 
-function shuffle(){
+function shuffle(deck){
   console.log('shuffle');
+  console.log(deck);
   deal();
 }
 
