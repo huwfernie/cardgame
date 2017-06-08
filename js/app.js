@@ -110,6 +110,7 @@ poker.whoWins = function whoWins(players){
   console.log('Who wins');
 
   let winner = 'No one';
+  let winners = [];
   let winningScore = 0;
   let draw = false;
 
@@ -117,23 +118,32 @@ poker.whoWins = function whoWins(players){
     const player = players[i];
     console.log(player.name, ' : ', player.score);
     if(player.score === winningScore) {
-      return draw = true;
+      winners.push(player.name);
+      draw = true;
     }
     if(player.score > winningScore) {
       winner = player.name;
       winningScore = player.score;
+      draw = false;
+      winners = [];
     }
   }
 
-  return poker.finish(winner, draw);
+  return poker.finish(winner, draw, winners);
 };
 
-poker.finish = function finish(winner,draw) {
+poker.finish = function finish(winner, draw, winners) {
   /* find HTML with class ".winner" and fill it with the name of the winning player*/
   const $winner = $('.winner');
 
   if(draw) {
-    return $winner.html('It\'s a draw!!!');
+    $winner.html('It\'s a draw!!!');
+    $winner.after('<ul></ul>');
+    winners.forEach((winner)=> {
+      $('ul').after(`<li>${winner}</li>`);
+    });
+
+
   } else {
     return $winner.html(`winner is : ${winner}`);
   }
