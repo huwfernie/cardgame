@@ -10,17 +10,9 @@ poker.setup = function() {
   $startButton.on('click', (e)=> {
     e.preventDefault();
     poker.buildTheDeck();
-    poker.clearTheScreen();
   }).bind(this);
-
 };
 
-
-poker.clearTheScreen = function clearTheScreen(){
-  console.log('clearing');
-  $('ul').empty();
-  return this.winners = [];
-};
 
 poker.buildTheDeck = function buildTheDeck(){
   /* builds an array of 52 objects, each object represents a card with keys of
@@ -79,7 +71,7 @@ poker.deal = function deal(deck) {
   if(deck.length < ($numberOfCards * $numberOfPlayers)) {
     // could make this an error message or alert.
     console.log('their aren\'t enough cards for this game');
-    return;
+    return alert('their aren\'t enough cards for this game');
   } else {
     const players = [];
     for(let i=1; i<=$numberOfPlayers; i++) {
@@ -100,7 +92,7 @@ poker.deal = function deal(deck) {
 
 poker.getScores = function getScores(players){
   /*Loop through all players, then each card in that players hand, add the card.value
-  to the cumulative player.score*/
+  to the cumulative player.score */
   console.log('Get Scores');
   players.forEach((player) => {
     player.hand.forEach((card) => {
@@ -108,41 +100,49 @@ poker.getScores = function getScores(players){
     });
   });
 
-  // use jQuery to "copy" the players object
-  // var A = $.extend(true,{},players);
-
   return poker.whoWins(players);
 };
 
 poker.whoWins = function whoWins(players){
-  /* loop through players array, if the score is highest replace the temp winner
-  and winning score with current values, then pass info to the finish function to
-  display data on screen.*/
+  /* 1st - arrange players array (using .sort) in order of players scores, so
+  players[0] will be the highest score
+
+  add player[0]'s name to the new array - winners
+
+  loop through all other players in the array, if any have a matching score to player[0]
+  then add their name to the winners array too.
+
+  call poker.finish and pass in the array of winning names*/
   console.log('Who wins',players);
 
   players.sort(function(a,b){
     return b.score - a.score;
   });
 
-  this.winners = [players[0].name];
+  const winners = [players[0].name];
 
   for(let i=1; i<players.length; i++) {
     console.log(i);
     if(players[i].score === players[0].score) {
-      this.winners.push(players[i].name);
+      winners.push(players[i].name);
     }
   }
-  return poker.finish(this.winners);
+  return poker.finish(winners);
 };
 
 poker.finish = function finish(winners) {
   console.log('finish', winners);
-  /* find HTML with class ".winner" and fill it with the name of the winning players
-  by looping through the array of winners and filling in <li>'s'*/
+  /* find HTML with class ".winner"
+
+  if more than one name in the winners array create a list with each name
+
+  if only one name in winners then display it
+
+  a new game will overwrite the old result.
+  */
   const $winner = $('.winner');
 
   if(winners.length>1) {
-    console.log(winners);
     $winner.html('It\'s a draw!!! <ul></ul>');
     winners.forEach((winner)=> {
       $('ul').after(`<li>${winner}</li>`);

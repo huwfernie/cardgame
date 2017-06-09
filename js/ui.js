@@ -3,7 +3,7 @@ var pokerUI = pokerUI || {};
 pokerUI.setup = function() {
 
 // run this on load!!
-  console.log('User Interface');
+  console.log('User Interface loaded');
 
   this.$playerUpButton = $('#playerUpButton');
   this.$playerDownButton = $('#playerDownButton');
