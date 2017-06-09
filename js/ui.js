@@ -5,27 +5,27 @@ pokerUI.setup = function() {
 // run this on load!!
   console.log('User Interface loaded');
 
-  this.$playerUpButton = $('#playerUpButton');
-  this.$playerDownButton = $('#playerDownButton');
-  this.$cardUpButton = $('#cardUpButton');
-  this.$cardDownButton = $('#cardDownButton');
+  const $playerUpButton = $('#playerUpButton');
+  const $playerDownButton = $('#playerDownButton');
+  const $cardUpButton = $('#cardUpButton');
+  const $cardDownButton = $('#cardDownButton');
 
   this.$numberOfPlayers = $('#numberOfPlayers');
   this.$numberOfCards = $('#numberOfCards');
 
-  this.$playerUpButton.on('click', ()=> {
+  $playerUpButton.on('click', ()=> {
     pokerUI.players(1);
   }).bind(this);
 
-  this.$playerDownButton.on('click', ()=> {
+  $playerDownButton.on('click', ()=> {
     pokerUI.players(-1);
   }).bind(this);
 
-  this.$cardUpButton.on('click', ()=> {
+  $cardUpButton.on('click', ()=> {
     pokerUI.cards(1);
   }).bind(this);
 
-  this.$cardDownButton.on('click', ()=> {
+  $cardDownButton.on('click', ()=> {
     pokerUI.cards(-1);
   }).bind(this);
 
@@ -33,16 +33,16 @@ pokerUI.setup = function() {
 
 pokerUI.players = function players(x){
   console.log('players', x);
-  this.temp = parseInt(this.$numberOfPlayers.val());
-  this.temp += x;
-  this.$numberOfPlayers.val(this.temp);
+  let temp = parseInt(this.$numberOfPlayers.val());
+  temp += x;
+  this.$numberOfPlayers.val(temp);
 };
 
 pokerUI.cards = function cards(x){
   console.log('cards', x);
-  this.temp = parseInt(this.$numberOfCards.val());
-  this.temp += x;
-  this.$numberOfCards.val(this.temp);
+  let temp = parseInt(this.$numberOfCards.val());
+  temp += x;
+  this.$numberOfCards.val(temp);
 };
 
 $(pokerUI.setup.bind(pokerUI));

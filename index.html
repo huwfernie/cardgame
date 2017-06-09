@@ -9,25 +9,32 @@
     <script src="js/ui.js" charset="utf-8"></script>
   </head>
   <body>
-    <h1>Card Game</h1>
-    <form>
-      <!-- Input for number of players in the game -->
-      <label for="numberOfPlayers">Players</label>
-      <input type="number" class="userInput" id="numberOfPlayers" placeholder="2..." value="4">
-      <!-- Input for number of cards in each players hand -->
-      <label for="numberOfCards">Cards</label>
-      <input type="number" class="userInput" id="numberOfCards" placeholder="7.." value="1">
+    <div>
+      <h1>Card Game</h1>
+      <form>
+        <!-- Input for number of players in the game -->
+        <label for="numberOfPlayers">Players</label>
+        <input type="number" class="userInput" id="numberOfPlayers" placeholder="2..." value="4">
+        <!-- Input for number of cards in each players hand -->
+        <label for="numberOfCards">Cards</label>
+        <input type="number" class="userInput" id="numberOfCards" placeholder="7.." value="1">
 
-      <button id="startButton">Start</button>
-    </form>
+        <button id="startButton">Start</button>
+      </form>
 
-    <button id="playerUpButton">Players +1</button>
-    <button id="playerDownButton">Players -1</button>
-    <button id="cardUpButton">Cards +1</button>
-    <button id="cardDownButton">Cards -1</button>
+      <button id="playerUpButton">Players +1</button>
+      <button id="playerDownButton">Players -1</button>
+      <button id="cardUpButton">Cards +1</button>
+      <button id="cardDownButton">Cards -1</button>
 
-    <div class="winner">
-      Who will win
+      <button id="reset">reset</button>
+
+      <div class="winner">
+        Who will win
+      </div>
+    </div>
+    <div class="players">
+
     </div>
   </body>
 </html>

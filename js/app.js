@@ -6,10 +6,17 @@ poker.setup = function() {
   console.log('Huw - app.js loaded');
 
   const $startButton = $('#startButton');
+  const $resetButton = $('#reset');
 
   $startButton.on('click', (e)=> {
     e.preventDefault();
+    poker.clearResults();
     poker.buildTheDeck();
+  }).bind(this);
+
+  $resetButton.on('click', (e)=> {
+    e.preventDefault();
+    poker.clearResults();
   }).bind(this);
 };
 
@@ -23,7 +30,8 @@ poker.buildTheDeck = function buildTheDeck(){
   const suits = ['hearts','diamonds','clubs','spades'];
   suits.forEach((suit) => {
     for(let i=1; i<=13; i++) {
-      const thisCard = { name: i, suit, value: i, image: `${i}${suit[0]}` };
+      const name = i + suit[0];
+      const thisCard = { name, suit, value: i, image: `${i}${suit[0]}` };
       deck.push(thisCard);
     }
   });
@@ -100,7 +108,7 @@ poker.getScores = function getScores(players){
     });
   });
 
-  const copyOfPlayers = $.extend(true, {}, players);
+  const copyOfPlayers = $.extend(true, [], players);
   poker.display(copyOfPlayers);
   return poker.whoWins(players);
 };
@@ -154,8 +162,26 @@ poker.finish = function finish(winners) {
   }
 };
 
+poker.clearResults = function clearResults() {
+  console.log('clear');
+  const $players = $('.players');
+  $players.empty();
+  return console.log('done');
+};
+
 poker.display = function display(copyOfPlayers){
+  /*
+  Takes an unsorted copy of the players array, and then loops through it creating an
+  HTML <div> for each player with a <div> for each card
+  */
   console.log('copy',copyOfPlayers);
+  const $players = $('.players');
+  copyOfPlayers.forEach((player) => {
+    $players.append(`<div class="player" id="${player.name}"><h2>${player.name}</h2></div>`);
+    player.hand.forEach((card)=>{
+      $(`#${player.name}`).append(`<div class="card" id="${card.name}" style="background-image: url('./images/${card.name}.svg');"></div>`);
+    });
+  });
 };
 
 $(poker.setup.bind(poker));
