@@ -187,10 +187,21 @@ poker.display = function display(copyOfPlayers){
   console.log('copy',copyOfPlayers);
 
   copyOfPlayers.forEach((player) => {
+    player.hand.forEach((card) =>{
+      if(card.suit === 'hearts'){
+        card.value = card.value + (39);
+      } else if(card.suit === 'spades') {
+        card.value = card.value + (26);
+      } else if(card.suit === 'diamonds') {
+        card.value = card.value + (13);
+      }
+    });
+  });
+
+  copyOfPlayers.forEach((player) => {
     player.hand.sort(function(a,b){
       return b.value - a.value;
     });
-
   });
 
 

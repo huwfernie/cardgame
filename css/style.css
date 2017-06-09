@@ -17,6 +17,7 @@ body {
   display: inline-block;
   /*background-image: url('../images/1c.svg');*/
   background-size: cover;
+  border: 1px solid black;
 }
 
 h2 {
