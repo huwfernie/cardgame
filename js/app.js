@@ -100,6 +100,8 @@ poker.getScores = function getScores(players){
     });
   });
 
+  const copyOfPlayers = $.extend(true, {}, players);
+  poker.display(copyOfPlayers);
   return poker.whoWins(players);
 };
 
@@ -150,6 +152,10 @@ poker.finish = function finish(winners) {
   } else {
     return $winner.html(`winner is : ${winners[0]}`);
   }
+};
+
+poker.display = function display(copyOfPlayers){
+  console.log('copy',copyOfPlayers);
 };
 
 $(poker.setup.bind(poker));
