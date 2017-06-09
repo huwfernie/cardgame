@@ -16,3 +16,10 @@ Well it's a JavaScript game with a bit of help from jQuery, which is pulled in f
 If you download by forking the GitHub repo or by unzipping the compressed folder all the files and folders should be in the right place and ready to go:
 
 Open the index.html file in your normal web browser and you should be ready to play.
+
+
+--
+
+playing card images from : https://github.com/digitaldesignlabs/responsive-playing-cards
+
+Shuffle function from : https://github.com/coolaj86/knuth-shuffle

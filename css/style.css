@@ -18,3 +18,8 @@ body {
   /*background-image: url('../images/1c.svg');*/
   background-size: cover;
 }
+
+h2 {
+  font-size: 1em;
+  font-weight: normal;
+}

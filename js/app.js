@@ -11,7 +11,7 @@ poker.setup = function() {
   $startButton.on('click', (e)=> {
     e.preventDefault();
     poker.clearResults();
-    poker.buildTheDeck();
+    poker.checkInput();
   }).bind(this);
 
   $resetButton.on('click', (e)=> {
@@ -20,6 +20,16 @@ poker.setup = function() {
   }).bind(this);
 };
 
+poker.checkInput = function checkInput(){
+  const $numberOfPlayers = parseInt($('#numberOfPlayers').val());
+  const $numberOfCards = parseInt($('#numberOfCards').val());
+
+  if ($numberOfCards >=1 && $numberOfCards <= 52 && $numberOfPlayers >= 1 && $numberOfPlayers <= 52){
+    return poker.buildTheDeck();
+  } else {
+    return alert('Change your player and card numbers and try again');
+  }
+};
 
 poker.buildTheDeck = function buildTheDeck(){
   /* builds an array of 52 objects, each object represents a card with keys of
@@ -175,9 +185,18 @@ poker.display = function display(copyOfPlayers){
   HTML <div> for each player with a <div> for each card
   */
   console.log('copy',copyOfPlayers);
+
+  copyOfPlayers.forEach((player) => {
+    player.hand.sort(function(a,b){
+      return b.value - a.value;
+    });
+
+  });
+
+
   const $players = $('.players');
   copyOfPlayers.forEach((player) => {
-    $players.append(`<div class="player" id="${player.name}"><h2>${player.name}</h2></div>`);
+    $players.append(`<div class="player" id="${player.name}"><h2>${player.name}, Score : ${player.score}</h2></div>`);
     player.hand.forEach((card)=>{
       $(`#${player.name}`).append(`<div class="card" id="${card.name}" style="background-image: url('./images/${card.name}.svg');"></div>`);
     });
