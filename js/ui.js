@@ -10,6 +10,9 @@ pokerUI.setup = function() {
   this.$cardUpButton = $('#cardUpButton');
   this.$cardDownButton = $('#cardDownButton');
 
+  this.$numberOfPlayers = $('#numberOfPlayers');
+  this.$numberOfCards = $('#numberOfCards');
+
   this.$playerUpButton.on('click', ()=> {
     pokerUI.players(1);
   }).bind(this);
@@ -28,14 +31,18 @@ pokerUI.setup = function() {
 
 };
 
-pokerUI.cards = function cards(x){
-  return console.log('cards', x);
-};
-
 pokerUI.players = function players(x){
-  return console.log('players', x);
+  console.log('players', x);
+  this.temp = parseInt(this.$numberOfPlayers.val());
+  this.temp += x;
+  this.$numberOfPlayers.val(this.temp);
 };
 
-
+pokerUI.cards = function cards(x){
+  console.log('cards', x);
+  this.temp = parseInt(this.$numberOfCards.val());
+  this.temp += x;
+  this.$numberOfCards.val(this.temp);
+};
 
 $(pokerUI.setup.bind(pokerUI));
