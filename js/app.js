@@ -3,15 +3,23 @@ var poker = poker || {};
 poker.setup = function() {
 
 // run this on load!!
-  console.log('Huw');
+  console.log('Huw - app.js loaded');
 
-  this.$startButton = $('#startButton');
+  const $startButton = $('#startButton');
 
-  this.$startButton.on('click', (e)=> {
+  $startButton.on('click', (e)=> {
     e.preventDefault();
     poker.buildTheDeck();
+    poker.clearTheScreen();
   }).bind(this);
 
+};
+
+
+poker.clearTheScreen = function clearTheScreen(){
+  console.log('clearing');
+  $('ul').empty();
+  return this.winners = [];
 };
 
 poker.buildTheDeck = function buildTheDeck(){
@@ -100,6 +108,9 @@ poker.getScores = function getScores(players){
     });
   });
 
+  // use jQuery to "copy" the players object
+  // var A = $.extend(true,{},players);
+
   return poker.whoWins(players);
 };
 
@@ -107,45 +118,37 @@ poker.whoWins = function whoWins(players){
   /* loop through players array, if the score is highest replace the temp winner
   and winning score with current values, then pass info to the finish function to
   display data on screen.*/
-  console.log('Who wins');
+  console.log('Who wins',players);
 
-  let winner = 'No one';
-  let winners = [];
-  let winningScore = 0;
-  let draw = false;
+  players.sort(function(a,b){
+    return b.score - a.score;
+  });
 
-  for(let i=0; i<players.length; i++) {
-    const player = players[i];
-    console.log(player.name, ' : ', player.score);
-    if(player.score === winningScore) {
-      winners.push(player.name);
-      draw = true;
-    }
-    if(player.score > winningScore) {
-      winner = player.name;
-      winningScore = player.score;
-      draw = false;
-      winners = [];
+  this.winners = [players[0].name];
+
+  for(let i=1; i<players.length; i++) {
+    console.log(i);
+    if(players[i].score === players[0].score) {
+      this.winners.push(players[i].name);
     }
   }
-
-  return poker.finish(winner, draw, winners);
+  return poker.finish(this.winners);
 };
 
-poker.finish = function finish(winner, draw, winners) {
-  /* find HTML with class ".winner" and fill it with the name of the winning player*/
+poker.finish = function finish(winners) {
+  console.log('finish', winners);
+  /* find HTML with class ".winner" and fill it with the name of the winning players
+  by looping through the array of winners and filling in <li>'s'*/
   const $winner = $('.winner');
 
-  if(draw) {
-    $winner.html('It\'s a draw!!!');
-    $winner.after('<ul></ul>');
+  if(winners.length>1) {
+    console.log(winners);
+    $winner.html('It\'s a draw!!! <ul></ul>');
     winners.forEach((winner)=> {
       $('ul').after(`<li>${winner}</li>`);
     });
-
-
   } else {
-    return $winner.html(`winner is : ${winner}`);
+    return $winner.html(`winner is : ${winners[0]}`);
   }
 };
 
