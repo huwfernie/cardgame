@@ -41,10 +41,23 @@ poker.buildTheDeck = function buildTheDeck(){
   suits.forEach((suit) => {
     for(let i=1; i<=13; i++) {
       const name = i + suit[0];
-      const thisCard = { name, suit, value: i, image: `${i}${suit[0]}` };
+      const thisCard = { name, suit, value: i, deckValue: i, image: `${i}${suit[0]}` };
       deck.push(thisCard);
     }
   });
+
+  /* This adds a multiple of 13 to each card based on its' suit so that all the cards in
+  the deck now have a unique descending value from king of Hearts(52) to ace of clubs(1)*/
+  deck.forEach((card) =>{
+    if(card.suit === 'hearts'){
+      card.deckValue = card.value + (39);
+    } else if(card.suit === 'spades') {
+      card.deckValue = card.value + (26);
+    } else if(card.suit === 'diamonds') {
+      card.deckValue = card.value + (13);
+    }
+  });
+
   return poker.shuffle(deck);
 };
 
@@ -118,8 +131,8 @@ poker.getScores = function getScores(players){
     });
   });
 
-  const copyOfPlayers = $.extend(true, [], players);
-  poker.display(copyOfPlayers);
+  // const copyOfPlayers = $.extend(true, [], players);
+  // poker.display(copyOfPlayers);
   return poker.bonusPoints(players);
 };
 
@@ -164,7 +177,14 @@ poker.bonusPoints = function bonusPoints(players) {
       }
     }
   });
-  return poker.whoWins(localCopyOfPlayers);
+
+
+  players.forEach((player,index)=> {
+    player.score = localCopyOfPlayers[index].score;
+  });
+
+  poker.display(players);
+  return poker.whoWins(players);
 };
 
 
@@ -185,19 +205,19 @@ poker.whoWins = function whoWins(players){
     return b.score - a.score;
   });
 
-  const winners = [players[0].name];
+  const winners = [players[0]];
 
   for(let i=1; i<players.length; i++) {
     console.log(i);
     if(players[i].score === players[0].score) {
-      winners.push(players[i].name);
+      winners.push(players[i]);
     }
   }
   return poker.finish(winners);
 };
 
 poker.finish = function finish(winners) {
-  console.log('finish', winners);
+  console.log('finish');
   /* find HTML with class ".winner"
 
   if more than one name in the winners array create a list with each name
@@ -208,16 +228,28 @@ poker.finish = function finish(winners) {
   */
   const $winner = $('.winner');
 
+  // sort each winner(s) hands by deckValue
+  // this is already done!
+
+  // sort the winners by the deckValue of the first card in their hand
+  console.log('sorted winners hands', winners);
+  winners.sort(function(a,b) {
+    return b.hand[0].deckValue - a.hand[0].deckValue;
+  });
+
+  // so winners[0] now has to have the highest trump card.
   if(winners.length>1) {
     $winner.html('It\'s a draw!!! <ul></ul>');
+    $('ul').after(`<li>But our winner by suit is ${winners[0].name}</li>`);
     winners.forEach((winner)=> {
-      $('ul').after(`<li>${winner}</li>`);
+      $('ul').after(`<li>${winner.name}</li>`);
     });
   } else {
-    return $winner.html(`winner is : ${winners[0]}`);
+    return $winner.html(`winner is : ${winners[0].name}`);
   }
 };
 
+/* Used to clear the results section of the display, for a new game */
 poker.clearResults = function clearResults() {
   console.log('clear');
   const $players = $('.players');
@@ -227,31 +259,18 @@ poker.clearResults = function clearResults() {
 
 poker.display = function display(copyOfPlayers){
   /*
-  Takes an unsorted copy of the players array, and then loops through it creating an
-  HTML <div> for each player with a <div> for each card
+  Takes an unsorted copy of the players array,
+
+  sort each players' hand array by the cards deckValue,
+
+  loops through players array creating an HTML <div> for each player with another <div> for each card in the players hand.
   */
   console.log('copy',copyOfPlayers);
 
-
-  /* This adds a multiple of 13 to each card based on its' suit so that all the cards in
-  the deck now have a unique descending value*/
-  copyOfPlayers.forEach((player) => {
-    player.hand.forEach((card) =>{
-      if(card.suit === 'hearts'){
-        card.value = card.value + (39);
-      } else if(card.suit === 'spades') {
-        card.value = card.value + (26);
-      } else if(card.suit === 'diamonds') {
-        card.value = card.value + (13);
-      }
-    });
-  });
-
-  /* This sorts each players hand of cards into order of suit and number based on the new
-  values */
+  /* This sorts each players hand of cards into order of suit and then value */
   copyOfPlayers.forEach((player) => {
     player.hand.sort(function(a,b){
-      return b.value - a.value;
+      return b.deckValue - a.deckValue;
     });
   });
 
