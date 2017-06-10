@@ -120,8 +120,54 @@ poker.getScores = function getScores(players){
 
   const copyOfPlayers = $.extend(true, [], players);
   poker.display(copyOfPlayers);
-  return poker.whoWins(players);
+  return poker.bonusPoints(players);
 };
+
+poker.bonusPoints = function bonusPoints(players) {
+  players.forEach((player)=> {
+    player.hand.sort(function(a,b) {
+      return a.value - b.value;
+    });
+  });
+
+  const localCopyOfPlayers = $.extend(true, [], players);
+
+  localCopyOfPlayers.forEach((player,index) => {
+    console.log('hand',player.hand);
+    // g,h,i are counters in the next for loop
+    for(let i=player.hand.length-1; i>=1; i--) {
+      const h = i-1;
+      const g = h-1;
+
+      if(i >=4) {
+        console.log('trying straight');
+        if(player.hand[i].value === player.hand[i-1].value+1 &&
+            player.hand[i].value === player.hand[i-2].value+2 &&
+            player.hand[i].value === player.hand[i-3].value+3 &&
+            player.hand[i].value === player.hand[i-4].value+4) {
+          console.log('win', player.hand[i].value);
+          player.score += 40; // +40 for a straight = [1,2,3,4,5]
+          player.hand.splice(i-4,5);
+        }
+      } else if(i >=2) {
+        console.log('trying 3 of a kind');
+        if(player.hand[g].value === player.hand[h].value && player.hand[h].value === player.hand[i].value) {
+          console.log('win', player.hand[g].value);
+          player.score += 20; // +20 for 3 of a kind
+          player.hand.splice(g,3);
+        }
+      } else if(player.hand[h].value === player.hand[i].value) {
+        console.log('pair', player.hand[h].value);
+        player.score = player.score+10;
+        console.log(players[index].score);// += 10; // +10 for a pair
+        player.hand.splice(h,2);
+      }
+    }
+  });
+  return poker.whoWins(localCopyOfPlayers);
+};
+
+
 
 poker.whoWins = function whoWins(players){
   /* 1st - arrange players array (using .sort) in order of players scores, so
@@ -186,6 +232,9 @@ poker.display = function display(copyOfPlayers){
   */
   console.log('copy',copyOfPlayers);
 
+
+  /* This adds a multiple of 13 to each card based on its' suit so that all the cards in
+  the deck now have a unique descending value*/
   copyOfPlayers.forEach((player) => {
     player.hand.forEach((card) =>{
       if(card.suit === 'hearts'){
@@ -198,12 +247,13 @@ poker.display = function display(copyOfPlayers){
     });
   });
 
+  /* This sorts each players hand of cards into order of suit and number based on the new
+  values */
   copyOfPlayers.forEach((player) => {
     player.hand.sort(function(a,b){
       return b.value - a.value;
     });
   });
-
 
   const $players = $('.players');
   copyOfPlayers.forEach((player) => {
