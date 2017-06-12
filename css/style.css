@@ -6,6 +6,7 @@ body {
   border: 1px solid green;
   margin: 5px;
   padding: 5px;
+  display: inline-block;
 }
 
 .card {
@@ -23,4 +24,15 @@ body {
 h2 {
   font-size: 1em;
   font-weight: normal;
+}
+
+/*//players is oulline*/
+.players {
+  border: 1px solid red;
+  display: inline-block;
+}
+
+.outline {
+  border: 1px solid red;
+  display: inline-block;
 }

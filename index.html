@@ -2,22 +2,23 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Title</title>
+    <title>Simple Poker</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="js/app.js" charset="utf-8"></script>
     <script src="js/ui.js" charset="utf-8"></script>
   </head>
   <body>
+    <!-- User interface section -->
     <div>
       <h1>Card Game</h1>
       <form>
         <!-- Input for number of players in the game -->
         <label for="numberOfPlayers">Players</label>
-        <input type="number" class="userInput" id="numberOfPlayers" placeholder="2..." value="4">
+        <input type="number" class="userInput" id="numberOfPlayers" placeholder="2..." value="1">
         <!-- Input for number of cards in each players hand -->
         <label for="numberOfCards">Cards</label>
-        <input type="number" class="userInput" id="numberOfCards" placeholder="7.." value="2">
+        <input type="number" class="userInput" id="numberOfCards" placeholder="7.." value="26">
 
         <button id="startButton">Start</button>
       </form>
@@ -33,8 +34,13 @@
         Who will win
       </div>
     </div>
-    <div class="players">
 
+    <!-- card table and players hands section -->
+    <div class='outline'>
+      <div class="players">
+
+      </div>
     </div>
+
   </body>
 </html>

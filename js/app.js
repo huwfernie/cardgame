@@ -3,7 +3,7 @@ var poker = poker || {};
 poker.setup = function() {
 
 // run this on load!!
-  console.log('Huw - app.js loaded');
+  console.log('app.js loaded');
 
   const $startButton = $('#startButton');
   const $resetButton = $('#reset');
@@ -131,67 +131,152 @@ poker.getScores = function getScores(players){
     });
   });
 
-  // const copyOfPlayers = $.extend(true, [], players);
-  // poker.display(copyOfPlayers);
   return poker.bonusPoints(players);
 };
 
 poker.bonusPoints = function bonusPoints(players) {
+  // sort each players hand by the card value
   players.forEach((player)=> {
     player.hand.sort(function(a,b) {
       return a.value - b.value;
     });
   });
 
-  const localCopyOfPlayers = $.extend(true, [], players);
+  /* create a new array called "handValues" that just holds the values of each players cards
+  index[0] will have the highest card value */
+  players.forEach((player)=> {
+    player.handValues = [];
+    player.hand.forEach((card) => {
+      player.handValues.push(card.value);
+    });
+    player.handValues.reverse();
+    console.log(player.handValues);
+  });
 
-  localCopyOfPlayers.forEach((player,index) => {
-    console.log('hand',player.hand);
-    // g,h,i are counters in the next for loop
-    for(let i=player.hand.length-1; i>=1; i--) {
-      const h = i-1;
-      const g = h-1;
+  /* loop through all players, call testStraight with each player, and 13 as the second
+  argument (highest card value), testStraight will then call testThreeOfAKind and that will call
+  testTwoPair and then return here for the next player */
+  players.forEach((player) => {
+    console.log('checking for bonus points : ', player.name);
+    poker.testStraight(player, 13);
+  });
 
-      if(i >=4) {
-        console.log('trying straight');
-        if(player.hand[i].value === player.hand[i-1].value+1 &&
-            player.hand[i].value === player.hand[i-2].value+2 &&
-            player.hand[i].value === player.hand[i-3].value+3 &&
-            player.hand[i].value === player.hand[i-4].value+4) {
-          console.log('win', player.hand[i].value);
-          player.score += 40; // +40 for a straight = [1,2,3,4,5]
-          player.hand.splice(i-4,5);
-        }
-      } else if(i >=2) {
-        console.log('trying 3 of a kind');
-        if(player.hand[g].value === player.hand[h].value && player.hand[h].value === player.hand[i].value) {
-          console.log('win', player.hand[g].value);
-          player.score += 20; // +20 for 3 of a kind
-          player.hand.splice(g,3);
-        }
-      } else if(player.hand[h].value === player.hand[i].value) {
-        console.log('pair', player.hand[h].value);
-        player.score = player.score+10;
-        console.log(players[index].score);// += 10; // +10 for a pair
-        player.hand.splice(h,2);
+  // display(players) will display each player and their cards on screen
+  return poker.display(players);
+};
+
+poker.testStraight = function testStraight(player, highestValue) {
+  // console.log('testing for straight',player.handValues);
+  // i,j,k,l,m are used in the next for loop 5,4,3,2,1 => i,j,k,l,m
+  for(let i=highestValue; i>=5; i--) {
+    const j = i-1;
+    const k = j-1;
+    const l = k-1;
+    const m = l-1;
+
+    // check to see if handValues includes 5 consecutive numbers
+    if((player.handValues.includes(i)) &&
+      (player.handValues.includes(j)) &&
+      (player.handValues.includes(k)) &&
+      (player.handValues.includes(l)) &&
+      (player.handValues.includes(m))) {
+      // console.log('found a straight');
+
+      // +40 for points for a straight
+      player.score += 40;
+      // remove any cards used in a straight, in reverse order
+      [m,l,k,j,i].forEach((element)=> {
+        const index = player.handValues.indexOf(element);
+        player.handValues.splice(index,1);
+      });
+      // start again if you get a straight, from the index we already checked up to.
+      return poker.testStraight(player, i);
+    }
+  }
+  // finished testing for straights, now testing for 3 of a kind
+  return poker.testThreeOfAKind(player, 0);
+};
+
+poker.testThreeOfAKind = function testThreeOfAKind(player, index) {
+  // console.log('testing for three ',player.handValues);
+  // i,j,k are used in the next for loop [5,4,3] => [i,j,k]
+  if(player.handValues.length >= 3){
+    for(let i=index; i<=player.handValues.length-3; i++) {
+      const j = i+1;
+      const k = j+1;
+
+      // if cards at index i, j & k have the same value then you have 3 of a kind
+      if((player.handValues[i] === player.handValues[j]) && (player.handValues[j] === player.handValues[k])) {
+        // console.log('found Three of a kind');
+
+        // +20 for points for a three of a kind
+        player.score += 20;
+        // remove any cards used in a three of a kind
+        player.handValues.splice(i,3);
+        // look again for another 3 of a kind, from the index you already searched to.
+        return poker.testThreeOfAKind(player, i);
       }
     }
+  }
+  // checked all options, now check for two pair:
+  return poker.testTwoPair(player, 0);
+};
+
+poker.testTwoPair = function testTwoPair(player, index) {
+  // console.log('testing for pair ',player.handValues);
+  // i,j,k are used in the next for loop [5,4,3] => [i,j,-]
+  if(player.handValues.length >= 2){
+    for(let i=index; i<=player.handValues.length-2; i++) {
+      const j = i+1;
+
+      if(player.handValues[i] === player.handValues[j]) {
+        // console.log('found Two Pair');
+
+        // +10 for points for a pair
+        player.score += 10;
+        // remove any cards used in a pair
+        player.handValues.splice(i,2);
+        // look again for another pair, from the index you already searched to.
+        return testTwoPair(player, i);
+      }
+    }
+  }
+  console.log('done');
+  // return will take you back to poker.bonusPoints, where you call poker.testStraight
+  return;
+};
+
+poker.display = function display(players){
+  /*
+  Takes the players array,
+
+  sort each players' hand array by the cards deckValue,
+
+  loops through players array creating an HTML <div> for each player with another <div> for each card in the players hand.
+  */
+  console.log('copy',players);
+
+  /* This sorts each players hand of cards into order of suit and then value */
+  players.forEach((player) => {
+    player.hand.sort(function(a,b){
+      return b.deckValue - a.deckValue;
+    });
   });
 
-
-  players.forEach((player,index)=> {
-    player.score = localCopyOfPlayers[index].score;
+  const $players = $('.players');
+  players.forEach((player) => {
+    $players.append(`<div class="player" id="${player.name}"><h2>${player.name}, Score : ${player.score}</h2></div>`);
+    player.hand.forEach((card)=>{
+      $(`#${player.name}`).append(`<div class="card" id="${card.name}" style="background-image: url('./images/${card.name}.svg');"></div>`);
+    });
   });
-
-  poker.display(players);
+  //
   return poker.whoWins(players);
 };
 
-
-
 poker.whoWins = function whoWins(players){
   /* 1st - arrange players array (using .sort) in order of players scores, so
-  players[0] will be the highest score
+  players[0] will be the player with the highest score
 
   add player[0]'s name to the new array - winners
 
@@ -228,9 +313,6 @@ poker.finish = function finish(winners) {
   */
   const $winner = $('.winner');
 
-  // sort each winner(s) hands by deckValue
-  // this is already done!
-
   // sort the winners by the deckValue of the first card in their hand
   console.log('sorted winners hands', winners);
   winners.sort(function(a,b) {
@@ -255,32 +337,6 @@ poker.clearResults = function clearResults() {
   const $players = $('.players');
   $players.empty();
   return console.log('done');
-};
-
-poker.display = function display(copyOfPlayers){
-  /*
-  Takes an unsorted copy of the players array,
-
-  sort each players' hand array by the cards deckValue,
-
-  loops through players array creating an HTML <div> for each player with another <div> for each card in the players hand.
-  */
-  console.log('copy',copyOfPlayers);
-
-  /* This sorts each players hand of cards into order of suit and then value */
-  copyOfPlayers.forEach((player) => {
-    player.hand.sort(function(a,b){
-      return b.deckValue - a.deckValue;
-    });
-  });
-
-  const $players = $('.players');
-  copyOfPlayers.forEach((player) => {
-    $players.append(`<div class="player" id="${player.name}"><h2>${player.name}, Score : ${player.score}</h2></div>`);
-    player.hand.forEach((card)=>{
-      $(`#${player.name}`).append(`<div class="card" id="${card.name}" style="background-image: url('./images/${card.name}.svg');"></div>`);
-    });
-  });
 };
 
 $(poker.setup.bind(poker));
