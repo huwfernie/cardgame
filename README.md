@@ -14,13 +14,14 @@ Each card is worth it's face value: 13pts for a king, 1 for an ace.
 - 10 bonus points for a pair
 
 --
-###Instructions:
+
+### Instructions:
 
 Open the `index.html` file in your normal web browser and you should be ready to play.
 
 --
 
-###The Tech:
+### The Tech:
 
 Well it's a JavaScript game with a bit of help from jQuery, which is pulled in from a CDN so you need to be online to load the game properly.
 
@@ -28,7 +29,7 @@ If you download by forking the GitHub repo or by unzipping the compressed folder
 
 --
 
-###Outside help:
+### Outside help:
 
 - The font comes from : [Google Fonts](https://fonts.google.com/?selection.family=Francois+One)
 - Playing card images from : [https://github.com/digitaldesignlabs/responsive-playing-cards](https://github.com/digitaldesignlabs/responsive-playing-cards)
