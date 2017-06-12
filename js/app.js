@@ -339,6 +339,8 @@ poker.clearResults = function clearResults() {
   // console.log('clear');
   const $players = $('.players');
   $players.empty();
+  const $winner = $('.winner');
+  $winner.html('Who will win???');
   return;
 };
 
