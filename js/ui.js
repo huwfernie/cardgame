@@ -33,16 +33,20 @@ pokerUI.setup = function() {
 
 pokerUI.players = function players(x){
   console.log('players', x);
-  let temp = parseInt(this.$numberOfPlayers.val());
+  let temp = parseInt(this.$numberOfPlayers.html());
   temp += x;
-  this.$numberOfPlayers.val(temp);
+  temp <= 0 ? temp = 1 : null;
+  temp >= 52 ? temp = 52 : null;
+  this.$numberOfPlayers.html(temp);
 };
 
 pokerUI.cards = function cards(x){
   console.log('cards', x);
-  let temp = parseInt(this.$numberOfCards.val());
+  let temp = parseInt(this.$numberOfCards.html());
   temp += x;
-  this.$numberOfCards.val(temp);
+  temp <= 0 ? temp = 1 : null;
+  temp >= 52 ? temp = 52 : null;
+  this.$numberOfCards.html(temp);
 };
 
 $(pokerUI.setup.bind(pokerUI));

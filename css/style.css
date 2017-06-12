@@ -1,17 +1,118 @@
 body {
-  background-color: white;
+  background-color: #1ac71a;
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-family: 'Francois One', sans-serif;
+}
+
+.interface {
+  height: 200px;
+  width: 350px;
+  padding: 20px;
+  display: inline-block;
+  border: 4px solid black;
+  border-radius: 20px;
+  margin: 50px auto 10px auto;
+  position: relative;
+  text-align: center;
+}
+
+.arrowButton {
+  position: absolute;
+  width: 50px;
+  height:50px;
+  border: none;
+  background: inherit;
+  background-image: url('../images/up_arrow.png');
+  background-size: cover;
+}
+
+.actionButton {
+  position: absolute;
+  width: 60px;
+  height:50px;
+  background: #ea3232;
+  border-radius: 20px;
+  font-size: 1em;
+  color: white;
+  border: 2px solid white;
+}
+.actionButton:hover {
+  background: #ef5a5a;
+  color: white;
+  border: 2px solid white;
+}
+
+#numberOfPlayersLabel {
+  position: absolute;
+  bottom: 80px;
+  left: 20px;
+}
+
+#numberOfCardsLabel {
+  position: absolute;
+  bottom: 80px;
+  right: 20px;
+}
+
+#startButton {
+  position: absolute;
+  bottom: 20px;
+  left: 100px;
+}
+#resetButton {
+  bottom: 20px;
+  right: 100px;
+}
+#playerUpButton {
+  left: 20px;
+  top: 80px;
+}
+#playerDownButton {
+  left: 20px;
+  bottom: 20px;
+  transform: rotate(180deg);
+}
+#cardUpButton {
+  right: 20px;
+  top: 80px;
+}
+#cardDownButton {
+  right: 20px;
+  bottom: 20px;
+  transform: rotate(180deg);
+}
+
+.winner {
+  width: 550px;
+  display: block;
+  border: 0px solid black;
+  margin: 20px auto;
+  position: relative;
+  text-align: center;
+  font-size: 2em;
+  color: #ea3232;
+}
+
+li {
+  list-style: none;
+  display: inline-block;
+  margin: 0 10px;
+  font-size: 1em;
 }
 
 .player {
-  border: 1px solid green;
-  margin: 5px;
+  border: 1px solid black;
+  margin: 20px 50px;
   padding: 5px;
   display: inline-block;
+  border-radius: 15px;
 }
 
 .card {
-  width: 15px;
-  height: 25px;
+  width: 25px;
+  height: 35px;
   border-radius: 5px;
   margin: 5px;
   background: yellow;
@@ -21,18 +122,12 @@ body {
   border: 1px solid black;
 }
 
-h2 {
-  font-size: 1em;
+h1 {
+  font-size: 2em;
   font-weight: normal;
 }
 
-/*//players is oulline*/
-.players {
-  border: 1px solid red;
-  display: inline-block;
-}
-
-.outline {
-  border: 1px solid red;
-  display: inline-block;
+h2 {
+  font-size: 1em;
+  font-weight: normal;
 }

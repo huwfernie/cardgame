@@ -6,7 +6,7 @@ poker.setup = function() {
   console.log('app.js loaded');
 
   const $startButton = $('#startButton');
-  const $resetButton = $('#reset');
+  const $resetButton = $('#resetButton');
 
   $startButton.on('click', (e)=> {
     e.preventDefault();
@@ -21,8 +21,9 @@ poker.setup = function() {
 };
 
 poker.checkInput = function checkInput(){
-  const $numberOfPlayers = parseInt($('#numberOfPlayers').val());
-  const $numberOfCards = parseInt($('#numberOfCards').val());
+  /* Check to see if input values are within 1-52 range*/
+  const $numberOfPlayers = parseInt($('#numberOfPlayers').html());
+  const $numberOfCards = parseInt($('#numberOfCards').html());
 
   if ($numberOfCards >=1 && $numberOfCards <= 52 && $numberOfPlayers >= 1 && $numberOfPlayers <= 52){
     return poker.buildTheDeck();
@@ -33,7 +34,7 @@ poker.checkInput = function checkInput(){
 
 poker.buildTheDeck = function buildTheDeck(){
   /* builds an array of 52 objects, each object represents a card with keys of
-  name, suit, value and image
+  name, suit, value, deckValue and image
   aces low */
   console.log('buildTheDeck');
   const deck = [];
@@ -41,7 +42,7 @@ poker.buildTheDeck = function buildTheDeck(){
   suits.forEach((suit) => {
     for(let i=1; i<=13; i++) {
       const name = i + suit[0];
-      const thisCard = { name, suit, value: i, deckValue: i, image: `${i}${suit[0]}` };
+      const thisCard = { name, suit, value: i, deckValue: i, image: `${i}${suit[0]}.svg` };
       deck.push(thisCard);
     }
   });
@@ -87,15 +88,15 @@ poker.shuffle = function shuffle(array) {
 
 poker.deal = function deal(deck) {
   /*
-  Takes an input of the deck (array of objects) then finds number of players and size of hand from the
+  Takes an input of the deck (array of objects) then reads number of players and size of hand from the
   input boxes on the HTML, checks there are enough cards in the deck and then 'deals' each player a hand
   of cards
 
   output is an array (of players) filled with objects (players),
   each player has keys of : name, score, hand(array of card objects)
   */
-  const $numberOfPlayers = $('#numberOfPlayers').val();
-  const $numberOfCards = $('#numberOfCards').val();
+  const $numberOfPlayers = $('#numberOfPlayers').html();
+  const $numberOfCards = $('#numberOfCards').html();
 
   console.log(`Dealing ${$numberOfPlayers} players with ${$numberOfCards} cards`);
 
@@ -116,13 +117,14 @@ poker.deal = function deal(deck) {
       thisPlayer.score = 0;
       players.push(thisPlayer);
     }
-    console.log('done', players);
+    // console.log('done', players);
+
     return poker.getScores(players);
   }
 };
 
 poker.getScores = function getScores(players){
-  /*Loop through all players, then each card in that players hand, add the card.value
+  /* Loop through all players, then each card in that players hand, add the card.value
   to the cumulative player.score */
   console.log('Get Scores');
   players.forEach((player) => {
@@ -132,10 +134,12 @@ poker.getScores = function getScores(players){
   });
 
   return poker.bonusPoints(players);
+  // use "return poker.display(players);" if you don't want bonus points for straight/3ofaKind/pair
 };
 
 poker.bonusPoints = function bonusPoints(players) {
   // sort each players hand by the card value
+  console.log('Bonus Points');
   players.forEach((player)=> {
     player.hand.sort(function(a,b) {
       return a.value - b.value;
@@ -150,14 +154,14 @@ poker.bonusPoints = function bonusPoints(players) {
       player.handValues.push(card.value);
     });
     player.handValues.reverse();
-    console.log(player.handValues);
+    // console.log(player.handValues);
   });
 
   /* loop through all players, call testStraight with each player, and 13 as the second
   argument (highest card value), testStraight will then call testThreeOfAKind and that will call
   testTwoPair and then return here for the next player */
   players.forEach((player) => {
-    console.log('checking for bonus points : ', player.name);
+    // console.log('checking for bonus points : ', player.name);
     poker.testStraight(player, 13);
   });
 
@@ -241,7 +245,7 @@ poker.testTwoPair = function testTwoPair(player, index) {
       }
     }
   }
-  console.log('done');
+  // console.log('done');
   // return will take you back to poker.bonusPoints, where you call poker.testStraight
   return;
 };
@@ -254,8 +258,8 @@ poker.display = function display(players){
 
   loops through players array creating an HTML <div> for each player with another <div> for each card in the players hand.
   */
-  console.log('copy',players);
 
+  console.log('Display');
   /* This sorts each players hand of cards into order of suit and then value */
   players.forEach((player) => {
     player.hand.sort(function(a,b){
@@ -267,7 +271,7 @@ poker.display = function display(players){
   players.forEach((player) => {
     $players.append(`<div class="player" id="${player.name}"><h2>${player.name}, Score : ${player.score}</h2></div>`);
     player.hand.forEach((card)=>{
-      $(`#${player.name}`).append(`<div class="card" id="${card.name}" style="background-image: url('./images/${card.name}.svg');"></div>`);
+      $(`#${player.name}`).append(`<div class="card" id="${card.name}" style="background-image: url('./images/${card.image}');"></div>`);
     });
   });
   //
@@ -284,7 +288,7 @@ poker.whoWins = function whoWins(players){
   then add their name to the winners array too.
 
   call poker.finish and pass in the array of winning names*/
-  console.log('Who wins',players);
+  console.log('Who wins');
 
   players.sort(function(a,b){
     return b.score - a.score;
@@ -293,7 +297,7 @@ poker.whoWins = function whoWins(players){
   const winners = [players[0]];
 
   for(let i=1; i<players.length; i++) {
-    console.log(i);
+    //console.log(i);
     if(players[i].score === players[0].score) {
       winners.push(players[i]);
     }
@@ -302,19 +306,18 @@ poker.whoWins = function whoWins(players){
 };
 
 poker.finish = function finish(winners) {
-  console.log('finish');
+  // console.log('finish');
   /* find HTML with class ".winner"
 
   if more than one name in the winners array create a list with each name
 
   if only one name in winners then display it
-
-  a new game will overwrite the old result.
   */
   const $winner = $('.winner');
 
   // sort the winners by the deckValue of the first card in their hand
-  console.log('sorted winners hands', winners);
+  // console.log('finish', winners);
+  console.log('finish');
   winners.sort(function(a,b) {
     return b.hand[0].deckValue - a.hand[0].deckValue;
   });
@@ -324,19 +327,19 @@ poker.finish = function finish(winners) {
     $winner.html('It\'s a draw!!! <ul></ul>');
     $('ul').after(`<li>But our winner by suit is ${winners[0].name}</li>`);
     winners.forEach((winner)=> {
-      $('ul').after(`<li>${winner.name}</li>`);
+      $('ul').append(`<li>${winner.name}</li>`);
     });
   } else {
-    return $winner.html(`winner is : ${winners[0].name}`);
+    return $winner.html(`and the winner is... ${winners[0].name}`);
   }
 };
 
 /* Used to clear the results section of the display, for a new game */
 poker.clearResults = function clearResults() {
-  console.log('clear');
+  // console.log('clear');
   const $players = $('.players');
   $players.empty();
-  return console.log('done');
+  return;
 };
 
 $(poker.setup.bind(poker));

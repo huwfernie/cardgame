@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Simple Poker</title>
+    <link href="https://fonts.googleapis.com/css?family=Francois+One" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="js/app.js" charset="utf-8"></script>
@@ -10,33 +11,34 @@
   </head>
   <body>
     <!-- User interface section -->
-    <div>
-      <h1>Card Game</h1>
+    <div class="interface">
+      <h1>Simple Poker</h1>
       <form>
         <!-- Input for number of players in the game -->
-        <label for="numberOfPlayers">Players</label>
-        <input type="number" class="userInput" id="numberOfPlayers" placeholder="2..." value="1">
+        <div id="numberOfPlayersLabel">Players
+        <span id="numberOfPlayers">4</span></div>
         <!-- Input for number of cards in each players hand -->
-        <label for="numberOfCards">Cards</label>
-        <input type="number" class="userInput" id="numberOfCards" placeholder="7.." value="26">
+        <div id="numberOfCardsLabel">Cards
+        <span id="numberOfCards">7</span></div>
 
-        <button id="startButton">Start</button>
+        <button class="actionButton" id="startButton">Start</button>
       </form>
 
-      <button id="playerUpButton">Players +1</button>
-      <button id="playerDownButton">Players -1</button>
-      <button id="cardUpButton">Cards +1</button>
-      <button id="cardDownButton">Cards -1</button>
 
-      <button id="reset">reset</button>
+      <button class="arrowButton" id="playerUpButton"></button>
+      <button class="arrowButton" id="playerDownButton"></button>
+      <button class="arrowButton" id="cardUpButton"></button>
+      <button class="arrowButton" id="cardDownButton"></button>
 
-      <div class="winner">
-        Who will win
-      </div>
+      <button class="actionButton" id="resetButton">reset</button>
+    </div>
+
+    <div class="winner">
+      Who will win ???
     </div>
 
     <!-- card table and players hands section -->
-    <div class='outline'>
+    <div class="outline">
       <div class="players">
 
       </div>
